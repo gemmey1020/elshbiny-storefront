@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  background: #0f111a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: #0f111a;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: #0f111a;
+}
+
+html[dir="rtl"] body {
+  font-family: var(--font-cairo), var(--font-inter), sans-serif;
+}
+
+html[dir="rtl"] .font-headline {
+  font-family: var(--font-cairo), var(--font-playfair), serif;
+  letter-spacing: 0;
+}
+
+html[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+html[dir="rtl"] .rtl-ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+html[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+html[dir="rtl"] .md\:text-right {
+  text-align: right;
+}
+
+@layer utilities {
+  .glass-panel {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.085), rgba(15, 17, 26, 0.58) 44%, rgba(255, 255, 255, 0.035));
+    box-shadow: 0 22px 70px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(42px);
+  }
+
+  .platinum-pulse {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 0 24px rgba(226, 232, 240, 0.16);
+  }
+
+  .platinum-pulse::after {
+    content: "";
+    position: absolute;
+    inset: -40% auto -40% -70%;
+    width: 48%;
+    transform: skewX(-18deg);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+    animation: platinum-sweep 1.75s ease-in-out infinite;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .hero-3d-canvas {
+    outline: none;
+  }
+
+  .mannequin-loader-pulse {
+    animation: mannequin-breathe 1.8s ease-in-out infinite;
+    filter: drop-shadow(0 0 26px rgba(255, 255, 255, 0.16));
+  }
+
+  .mannequin-contact-button {
+    animation: mannequin-contact-breathe 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes platinum-sweep {
+  0% {
+    left: -70%;
+  }
+
+  55%,
+  100% {
+    left: 125%;
+  }
+}
+
+@keyframes mannequin-breathe {
+  0%,
+  100% {
+    opacity: 0.76;
+    transform: translateY(0) scale(0.98);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.02);
+  }
+}
+
+@keyframes mannequin-contact-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 0 18px rgba(255, 255, 255, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.24), 0 0 34px rgba(255, 255, 255, 0.2);
+  }
+}
