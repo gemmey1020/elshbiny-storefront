@@ -12,6 +12,12 @@ function apiImagePatterns() {
       port: '8011',
       pathname: '/**',
     },
+    {
+      protocol: 'https',
+      hostname: 'api.elshbiny.com',
+      port: '',
+      pathname: '/**',
+    },
   ];
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -36,6 +42,7 @@ function apiImagePatterns() {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone', // [OMEGA OVERRIDE]: Activated for Hostinger Deployment
   images: {
     remotePatterns: apiImagePatterns(),
   },

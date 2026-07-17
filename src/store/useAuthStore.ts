@@ -8,6 +8,10 @@ export type AuthUser = {
   id: number;
   name: string;
   email: string;
+  role?: "buyer" | "super_admin";
+  phone?: string | null;
+  company_name?: string | null;
+  address?: string | null;
 };
 
 type AuthProfileResponse = {
@@ -34,6 +38,7 @@ type AuthStore = {
   register: (name: string, email: string, password: string) => Promise<void>;
   syncProfile: () => Promise<void>;
   logout: () => Promise<void>;
+  updateProfile: (profile: Pick<AuthUser, "phone" | "company_name" | "address">) => Promise<void>;
   clearAuth: () => void;
 };
 
@@ -139,6 +144,21 @@ export const useAuthStore = create<AuthStore>()(
         }
 
         set({ user: null, token: null, error: null, isSyncing: false, isAuthenticating: false });
+      },
+      updateProfile: async (profile) => {
+        const token = get().token;
+
+        if (!token) {
+          throw new Error("Missing auth token.");
+        }
+
+        const response = await apiFetch<AuthProfileResponse>("/auth/profile", {
+          method: "PATCH",
+          token,
+          body: JSON.stringify(profile),
+        });
+
+        set({ user: response.data, error: null });
       },
       clearAuth: () =>
         set({

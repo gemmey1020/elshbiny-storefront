@@ -28,12 +28,12 @@ export type HomeTrustPoint = {
 export const homeHero = {
   eyebrow_en: "Elshbiny Store Setup",
   eyebrow_ar: "تجهيز محلات الشبيني",
-  title_en: "Professional mannequins and display setups that help your store sell more.",
-  title_ar: "مانيكينات احترافية وتجهيزات عرض تساعد محلك يبيع أكتر.",
+  title_en: "Luxury mannequins and premium display setups by Elshbiny Studio.",
+  title_ar: "حابب تجهز او تغير محلك لاحسن شكل يبقا ده مكانك",
   body_en:
-    "A practical showroom for local retailers: see real mannequin lines, compare display styles, and start a store setup request without feeling lost.",
+    "If you want to set up your store or upgrade its look, this is your place. We do not just sell equipment; we design retail experiences.",
   body_ar:
-    "شوف خطوط المانيكانات، قارن شكل العرض المناسب لمحلك، وابدأ طلب تجهيز واضح من غير ما تحس إنك تايه.",
+    "الشبيني رقم ١ في تجهيز المحلات لو حابب مانيكان استاند شماعات تحف اكسسوار تغير شكل محلك يبقا ده مكانك خبرتنا تفرق ♥️",
   primary_cta_en: "Plan Store Setup",
   primary_cta_ar: "جهز محلك",
   secondary_cta_en: "Browse Catalog",

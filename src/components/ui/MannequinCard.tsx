@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ClipboardList, LockKeyhole } from "lucide-react";
 import { MannequinSilhouette } from "@/components/shared/MannequinSilhouette";
 import { useLanguage } from "@/i18n/LanguageProvider";
-import { categoryName, priceCopy, productName } from "@/i18n/config";
+import { categoryName, priceCopy, productName, labelFromValue, type Locale } from "@/i18n/config";
 
 export type MannequinProduct = {
   id: number;
@@ -34,11 +34,14 @@ function productImage(product: MannequinProduct) {
   return product.media?.tiny_float_url ?? product.media?.catalog_url ?? product.image_tiny ?? null;
 }
 
-function specPreview(product: MannequinProduct) {
+function specPreview(product: MannequinProduct, locale: Locale) {
   const specs = product.technical_specs ?? {};
-  const values = [specs.material, specs.pose, specs.gender].filter(Boolean);
+  const values = [specs.material, specs.pose, specs.gender]
+    .filter(Boolean)
+    .map((val) => labelFromValue(String(val), locale));
 
-  return values.length > 0 ? values.join(" / ") : product.sku ?? "Spec matrix pending";
+  const fallback = product.sku ?? (locale === "ar" ? "المواصفات قيد الإعداد" : "Spec matrix pending");
+  return values.length > 0 ? values.join(" / ") : fallback;
 }
 
 export function MannequinCard({ product, href }: MannequinCardProps) {
@@ -74,7 +77,7 @@ export function MannequinCard({ product, href }: MannequinCardProps) {
             <p className="text-xs uppercase text-text-secondary">{categoryName(product.category, locale)}</p>
             <h3 className="mt-2 font-headline text-2xl text-white">{name}</h3>
           </div>
-          <p className="min-h-5 text-sm text-text-secondary">{specPreview(product)}</p>
+          <p className="min-h-5 text-sm text-text-secondary">{specPreview(product, locale)}</p>
           <div className="flex items-center justify-between gap-4 border-t border-border-metallic pt-4">
             <span className="text-sm font-semibold text-white">{priceCopy(locale, product.price_visibility, product.base_price)}</span>
             <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase text-accent-platinum">

@@ -13,6 +13,7 @@ import { contactPage } from "@/data/contact";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import { pickLocalized } from "@/i18n/config";
 import { uiCopy } from "@/i18n/copy";
+import { storeContactRequest } from "@/lib/contact";
 
 const actionLinks = [
   { href: contactConfig.phoneHref, label: uiCopy.footer.call, icon: Phone },
@@ -46,6 +47,7 @@ export function ContactPageClient() {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [form, setForm] = useState<ContactFormState>(initialForm);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -83,7 +85,7 @@ export function ContactPageClient() {
     setForm((current) => ({ ...current, [field]: value }));
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!form.name.trim() || !form.phone.trim() || !form.requestType.trim()) {
@@ -111,7 +113,37 @@ export function ContactPageClient() {
             `Message: ${form.message.trim() || "I need guidance for my store setup."}`,
           ];
 
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      const params = new URLSearchParams(window.location.search);
+
+      await storeContactRequest({
+        name: form.name.trim(),
+        phone: form.phone.trim(),
+        company: form.storeType.trim() || undefined,
+        message: lines.join("\n"),
+        interest_type: form.requestType.trim(),
+        source_page: "contact",
+        utm_source: params.get("utm_source") ?? undefined,
+        utm_medium: params.get("utm_medium") ?? undefined,
+        utm_campaign: params.get("utm_campaign") ?? undefined,
+      });
+    } catch {
+      setError(
+        pickLocalized(locale, {
+          en: "We could not save your request. Please try again so the team does not miss it.",
+          ar: "معرفناش نسجل طلبك. حاول تاني علشان الفريق ميفوتش رسالتك.",
+        }),
+      );
+      setIsSubmitting(false);
+      return;
+    }
+
     window.open(withWhatsAppMessage(lines.join("\n")), "_blank", "noopener,noreferrer");
+    setForm(initialForm);
+    setIsSubmitting(false);
   }
 
   return (
@@ -238,8 +270,8 @@ export function ContactPageClient() {
 
                 {error ? <p className="border border-white/20 bg-white/[0.03] px-4 py-3 text-sm text-white">{error}</p> : null}
 
-                <Button type="submit" icon={Send} className="platinum-pulse w-full">
-                  {pickLocalized(locale, contactPage.submit)}
+                <Button type="submit" icon={Send} className="platinum-pulse w-full" disabled={isSubmitting}>
+                  {isSubmitting ? pickLocalized(locale, { en: "Saving...", ar: "جاري التسجيل..." }) : pickLocalized(locale, contactPage.submit)}
                 </Button>
                 <p className="text-xs leading-5 text-text-secondary">{pickLocalized(locale, contactPage.successHint)}</p>
               </form>
@@ -262,8 +294,8 @@ export function ContactPageClient() {
               <p className="mt-5 font-semibold text-white">{pickLocalized(locale, { en: "Ready message", ar: "رسالة جاهزة" })}</p>
               <p className="mt-2 text-sm leading-6 text-text-secondary">
                 {pickLocalized(locale, {
-                  en: "The WhatsApp message carries the useful details without needing backend storage.",
-                  ar: "رسالة الواتساب بتاخد التفاصيل المهمة من غير ما نحتاج تخزين باك إند دلوقتي.",
+                  en: "The request is stored before WhatsApp opens, so the team can follow up reliably.",
+                  ar: "رسالة الواتساب بتاخد التفاصيل المهمة، والطلب بيتسجل قبل التحويل.",
                 })}
               </p>
             </GlassCard>

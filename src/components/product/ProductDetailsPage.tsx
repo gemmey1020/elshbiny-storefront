@@ -9,8 +9,9 @@ import { Button } from "@/components/ui/Button";
 import { CrossSellGallery } from "@/components/product/CrossSellGallery";
 import { ZoomImage } from "@/components/product/ZoomImage";
 import { useLanguage } from "@/i18n/LanguageProvider";
-import { categoryName, formatSpecLabel, priceCopy, productName } from "@/i18n/config";
+import { categoryName, formatSpecLabel, labelFromValue, priceCopy, productName } from "@/i18n/config";
 import { useInquiryStore } from "@/store/useInquiryStore";
+import { useAuthStore } from "@/store/useAuthStore";
 import { type Product, getProduct, mediaImage, visibleSpecEntries } from "@/lib/catalog";
 
 type ProductDetailsPageProps = {
@@ -35,6 +36,7 @@ export function ProductDetailsPage({ slug }: ProductDetailsPageProps) {
   const [apiError, setApiError] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
   const addItem = useInquiryStore((state) => state.addItem);
+  const token = useAuthStore((state) => state.token);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,7 +46,7 @@ export function ProductDetailsPage({ slug }: ProductDetailsPageProps) {
       setApiError(null);
 
       try {
-        const data = await getProduct(slug);
+        const data = await getProduct(slug, token);
 
         if (!cancelled) {
           setProduct(data);
@@ -67,7 +69,7 @@ export function ProductDetailsPage({ slug }: ProductDetailsPageProps) {
     return () => {
       cancelled = true;
     };
-  }, [slug, locale]);
+  }, [slug, locale, token]);
 
   const thumbnails = useMemo(() => (product ? thumbnailSources(product) : []), [product]);
   const specEntries = useMemo(() => visibleSpecEntries(product?.technical_specs), [product]);
@@ -203,7 +205,7 @@ export function ProductDetailsPage({ slug }: ProductDetailsPageProps) {
                     {specEntries.map(([key, value]) => (
                       <div key={key} className="grid gap-2 p-4 md:grid-cols-[220px_1fr]">
                         <dt className="text-xs font-semibold uppercase text-text-secondary">{formatSpecLabel(key, locale)}</dt>
-                        <dd className="text-sm text-white">{String(value)}</dd>
+                        <dd className="text-sm text-white">{labelFromValue(String(value), locale)}</dd>
                       </div>
                     ))}
                   </dl>

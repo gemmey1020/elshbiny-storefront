@@ -5,7 +5,13 @@ export type ApiFetchOptions = RequestInit & {
 const API_PREFIX = "/api/v1";
 
 export function apiBaseUrl() {
-  return process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
+  const configuredUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ?? "";
+
+  if (configuredUrl.endsWith(API_PREFIX)) {
+    return configuredUrl.slice(0, -API_PREFIX.length);
+  }
+
+  return configuredUrl;
 }
 
 export function apiPath(path: string) {

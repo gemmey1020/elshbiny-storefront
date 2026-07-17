@@ -73,18 +73,59 @@ export function HeroSection() {
 
   return (
     <main>
-      <section className="relative flex min-h-[92svh] items-center overflow-hidden border-b border-border-metallic px-5 pb-16 pt-28 md:px-10">
-        <div className="mx-auto grid w-full max-w-[1440px] items-center gap-12 lg:grid-cols-[0.92fr_1.08fr]">
+      <section
+        style={{
+          backgroundImage: "url('/brand/hero-bg.jpeg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+        className="relative flex min-h-[92svh] items-center overflow-hidden border-b border-border-metallic px-5 pb-16 pt-28 md:px-10 md:!bg-none"
+      >
+        {/* Mobile-only obsidian overlay for premium contrast & perfect typography legibility */}
+        <div className="absolute inset-0 bg-background-obsidian/75 z-0 pointer-events-none md:hidden" />
+
+        <div className="mx-auto grid w-full max-w-[1440px] items-center gap-12 lg:grid-cols-[0.92fr_1.08fr] z-10 relative">
           <motion.div style={{ y: yCopy }} className="max-w-3xl">
-            <p className="mb-5 text-sm font-semibold uppercase text-accent-platinum">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-accent-platinum">
               {pickLocalized(locale, { en: homeHero.eyebrow_en, ar: homeHero.eyebrow_ar })}
             </p>
-            <h1 className="font-headline text-5xl leading-[1.03] text-white md:text-7xl">
+
+            {/* Premium Category Quick Navigation Bar for Mobile-first retail discovery */}
+            <div className="mb-6 flex flex-wrap gap-1.5 justify-center lg:justify-start">
+              {[
+                { label: locale === "ar" ? "مانيكان" : "Mannequins", href: "/catalog?category=premium-window-mannequins" },
+                { label: locale === "ar" ? "استاندات" : "Stands", href: "/catalog?category=display-props-stands" },
+                { label: locale === "ar" ? "شماعات" : "Hangers", href: "/catalog?category=modular-retail-forms" },
+                { label: locale === "ar" ? "تحف" : "Antiques", href: "/catalog?category=display-props-stands" },
+                { label: locale === "ar" ? "اكسسوار" : "Accessories", href: "/catalog?category=display-props-stands" },
+              ].map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="px-3.5 py-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-accent-platinum border border-border-metallic/30 bg-white/[0.01] hover:bg-white hover:text-background-obsidian hover:border-white transition-all duration-300 rounded-sm glass-panel"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+
+            <h1 className="font-headline text-[1.95rem] leading-[1.12] text-white sm:text-4xl md:text-5xl lg:text-6xl">
               {pickLocalized(locale, { en: homeHero.title_en, ar: homeHero.title_ar })}
             </h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-text-secondary md:text-xl">
-              {pickLocalized(locale, { en: homeHero.body_en, ar: homeHero.body_ar })}
-            </p>
+            {locale === "ar" ? (
+              <p className="mt-5 max-w-2xl text-sm leading-6 text-zinc-100/95 md:text-base md:leading-8 drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]">
+                <span className="inline-flex items-center gap-1 font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 animate-pulse drop-shadow-[0_0_15px_rgba(245,158,11,0.85)]">
+                  الشبيني رقم ١
+                  <span className="text-[10px] sm:text-xs">⭐</span>
+                </span>{" "}
+                في تجهيز المحلات لو حابب مانيكان استاند شماعات تحف اكسسوار تغير شكل محلك يبقا ده مكانك خبرتنا تفرق ♥️
+              </p>
+            ) : (
+              <p className="mt-5 max-w-2xl text-sm leading-6 text-zinc-300 md:text-base md:leading-8">
+                {homeHero.body_en}
+              </p>
+            )}
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Button href="/fit-out" icon={ClipboardList} className="platinum-pulse">
                 {pickLocalized(locale, { en: homeHero.primary_cta_en, ar: homeHero.primary_cta_ar })}
@@ -93,7 +134,7 @@ export function HeroSection() {
                 {pickLocalized(locale, { en: homeHero.secondary_cta_en, ar: homeHero.secondary_cta_ar })}
               </Button>
             </div>
-            <div className="mt-9 grid gap-3 sm:grid-cols-3">
+            <div className="mt-9 hidden md:grid gap-3 sm:grid-cols-3">
               {homeStats.map((stat) => (
                 <div key={stat.label_en} className="border border-border-metallic bg-white/[0.02] p-3">
                   <p className="text-xs uppercase text-text-secondary">{pickLocalized(locale, { en: stat.label_en, ar: stat.label_ar })}</p>
@@ -103,7 +144,7 @@ export function HeroSection() {
             </div>
           </motion.div>
 
-          <motion.div style={{ y: yStage }} className="flex justify-center">
+          <motion.div style={{ y: yStage }} className="hidden md:flex justify-center">
             <HeroMannequinScene />
           </motion.div>
         </div>

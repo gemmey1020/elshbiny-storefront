@@ -12,6 +12,7 @@ import { useLanguage } from "@/i18n/LanguageProvider";
 import { categoryName, labelFromValue, pickLocalized } from "@/i18n/config";
 import { uiCopy } from "@/i18n/copy";
 import { type Category, type PaginatedApiResponse, type Product, listCategories, listProducts } from "@/lib/catalog";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const PER_PAGE = 9;
 
@@ -98,6 +99,7 @@ export function CatalogPage() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const token = useAuthStore((state) => state.token);
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [facetProducts, setFacetProducts] = useState<Product[]>([]);
@@ -156,7 +158,7 @@ export function CatalogPage() {
       try {
         const [categoryData, facetData] = await Promise.all([
           listCategories(),
-          listProducts({ per_page: 50 }),
+          listProducts({ per_page: 50 }, token),
         ]);
 
         if (!cancelled) {
@@ -178,7 +180,7 @@ export function CatalogPage() {
     return () => {
       cancelled = true;
     };
-  }, [locale]);
+  }, [locale, token]);
 
   useEffect(() => {
     let cancelled = false;
@@ -188,7 +190,7 @@ export function CatalogPage() {
       setApiError(null);
 
       try {
-        const response = await listProducts({ ...filters, page: 1, per_page: PER_PAGE });
+        const response = await listProducts({ ...filters, page: 1, per_page: PER_PAGE }, token);
 
         if (!cancelled) {
           setProducts(response.data);
@@ -216,14 +218,14 @@ export function CatalogPage() {
     return () => {
       cancelled = true;
     };
-  }, [filters, locale]);
+  }, [filters, locale, token]);
 
   async function loadMore() {
     const nextPage = page + 1;
     setLoadingMore(true);
 
     try {
-      const response = await listProducts({ ...filters, page: nextPage, per_page: PER_PAGE });
+      const response = await listProducts({ ...filters, page: nextPage, per_page: PER_PAGE }, token);
       setProducts((current) => [...current, ...response.data]);
       setMeta(response.meta);
       setPage(nextPage);

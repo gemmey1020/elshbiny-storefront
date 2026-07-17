@@ -4,9 +4,11 @@ export type PriceVisibility = "public" | "authenticated" | "hidden";
 
 export type Category = {
   id: number;
+  parent_id?: number | null;
   name_en: string;
   name_ar?: string | null;
   slug: string;
+  sort_order?: number;
   description_en?: string | null;
   description_ar?: string | null;
   products_count?: number;
@@ -79,14 +81,14 @@ export async function listCategories() {
   return response.data;
 }
 
-export async function listProducts(filters: ProductListFilters = {}) {
+export async function listProducts(filters: ProductListFilters = {}, token?: string | null) {
   const query = cleanFilters(filters);
 
-  return apiFetch<PaginatedApiResponse<Product>>(`/products${query ? `?${query}` : ""}`);
+  return apiFetch<PaginatedApiResponse<Product>>(`/products${query ? `?${query}` : ""}`, { token });
 }
 
-export async function getProduct(slug: string) {
-  const response = await apiFetch<SingleApiResponse<Product>>(`/products/${slug}`);
+export async function getProduct(slug: string, token?: string | null) {
+  const response = await apiFetch<SingleApiResponse<Product>>(`/products/${slug}`, { token });
 
   return response.data;
 }

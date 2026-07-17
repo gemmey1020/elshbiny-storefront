@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle, MessagesSquare, Phone } from "lucide-react";
 import { contactConfig } from "@/config/contact";
-import { MannequinGlyph } from "@/components/shared/MannequinLoader";
+import { MannequinGlyphFinal } from "@/components/shared/MannequinLoader";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import { pickLocalized } from "@/i18n/config";
 import { uiCopy } from "@/i18n/copy";
@@ -59,7 +59,7 @@ export function FloatingContactLauncher() {
         aria-label={pickLocalized(locale, { en: "Open Elshbiny contact options", ar: "افتح اختيارات التواصل مع الشبيني" })}
         className="mannequin-contact-button grid h-16 w-16 place-items-center rounded-full border border-white/20 bg-background-obsidian/90 shadow-[0_0_28px_rgba(255,255,255,0.14)] backdrop-blur-[30px] transition hover:border-white"
       >
-        <MannequinGlyph compact />
+        <MannequinGlyphFinal compact />
       </button>
     </div>
   );
